@@ -23,6 +23,8 @@ from cv2 import imread
 from cv2 import cvtColor
 from cv2 import COLOR_BGR2GRAY
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 # 引入打开文件所用的库
 # Window与Linux和Mac OSX有所不同
@@ -61,7 +63,7 @@ def sex_ratio():
 
     pie = Pie("微信好友性别比例")
     pie.add("", name_list, num_list, is_label_show=True)
-    pie.render('data/好友性别比例.html')
+    pie.render('data/sex_ratio.html')
 
 
 
@@ -92,7 +94,7 @@ def region_distribution():
     # maptype='china' 只显示全国直辖市和省级，数据只能是省名和直辖市的名称
     map = Map("微信好友地区分布")
     map.add("", province, values, visual_range=[0, 50], maptype='china', is_visualmap=True, visual_text_color='#000')
-    map.render(path="data/好友地区分布.html")
+    map.render(path="data/region_distribution_1.html")
 
 
     # 对好友数最多的省份进行一进步分析
@@ -106,7 +108,7 @@ def region_distribution():
     city_dict = {}
     # 遍历
     for user in friends:
-        if(user.province == max_count_province):
+        if (unicode(user.province) == unicode(max_count_province)):
             # 更新键值对
             if(user.city in city_dict.keys()):
                 city_dict[user.city] += 1
@@ -115,7 +117,7 @@ def region_distribution():
 
     bar = Bar(max_count_province + '中,好友地区分布')
     bar.add(name='地区分布', x_axis=[x for x in city_dict.keys()], y_axis=[x for x in city_dict.values()])
-    bar.render('data/某省好友地区分布.html')
+    bar.render('data/region_distribution_2.html')
 
 
 
@@ -143,7 +145,7 @@ def statistics_friends():
 
     pie = Pie("你认识的好友比例", title_pos='center')
     pie.add("", name_list, num_list, is_label_show=True, legend_orient="vertical", legend_pos="left")
-    pie.render('data/你认识的好友比例.html')
+    pie.render('data/statistics_friends.html')
 
 
 # 分析备注名称
@@ -166,7 +168,7 @@ def analyze_remark_name():
 
     pie = Pie("可能是你最亲密的人")
     pie.add("", name_list, num_list, is_label_show=True, is_legend_show=False)
-    pie.render('data/你最亲密的人.html')
+    pie.render('data/love.html')
 
 
 
@@ -227,7 +229,7 @@ def analyze_signature():
     value = [x for x in signature_dict.values()]
     wordcloud = WordCloud('微信好友个性签名词云图')
     wordcloud.add("", name, value, shape='star', word_size_range=[1,100])
-    wordcloud.render('data/好友个性签名词云.html')
+    wordcloud.render('data/analyze_signature.html')
 
 
 # 下载好友头像，此步骤消耗时间比较长
@@ -250,7 +252,7 @@ def download_head_image(thread_name):
 
 # 生成一个html文件，并保存到文件file_name中
 def generate_html(file_name):
-    with open(file_name, 'w', encoding='utf-8') as f:
+    with open(file_name, 'w') as f:
         data = '''
             <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
             <meta charset="UTF-8">
@@ -259,16 +261,16 @@ def generate_html(file_name):
             <meta name='description' content=''> 
 
             
-            <iframe name="iframe1" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友地区分布.html" frameborder=0></iframe>
-            <iframe name="iframe2" marginwidth=0 marginheight=0 width=100% height=60% src="data/某省好友地区分布.html" frameborder=0></iframe>
-            <iframe name="iframe3" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友性别比例.html" frameborder=0></iframe>
-            <iframe name="iframe4" marginwidth=0 marginheight=0 width=100% height=60% src="data/你认识的好友比例.html" frameborder=0></iframe>
-            <iframe name="iframe5" marginwidth=0 marginheight=0 width=100% height=60% src="data/你最亲密的人.html" frameborder=0></iframe>
-            <iframe name="iframe6" marginwidth=0 marginheight=0 width=100% height=60% src="data/特殊好友分析.html" frameborder=0></iframe>
-            <iframe name="iframe7" marginwidth=0 marginheight=0 width=100% height=60% src="data/共同所在群聊分析.html" frameborder=0></iframe>
-            <iframe name="iframe8" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友个性签名词云.html" frameborder=0></iframe>
-            <iframe name="iframe9" marginwidth=0 marginheight=0 width=100% height=60% src="data/微信好友头像拼接图.html" frameborder=0></iframe>
-            <iframe name="iframe10" marginwidth=0 marginheight=0 width=100% height=60% src="data/使用人脸的微信好友头像拼接图.html" frameborder=0></iframe>
+            <iframe name="iframe1" marginwidth=0 marginheight=0 width=100% height=60% src="data/region_distribution_1.html" frameborder=0></iframe>
+            <iframe name="iframe2" marginwidth=0 marginheight=0 width=100% height=60% src="data/region_distribution_2.html" frameborder=0></iframe>
+            <iframe name="iframe3" marginwidth=0 marginheight=0 width=100% height=60% src="data/sex_ratio.html" frameborder=0></iframe>
+            <iframe name="iframe4" marginwidth=0 marginheight=0 width=100% height=60% src="data/statistics_friends.html" frameborder=0></iframe>
+            <iframe name="iframe5" marginwidth=0 marginheight=0 width=100% height=60% src="data/love.html" frameborder=0></iframe>
+            <iframe name="iframe6" marginwidth=0 marginheight=0 width=100% height=60% src="data/special_friend.html" frameborder=0></iframe>
+            <iframe name="iframe7" marginwidth=0 marginheight=0 width=100% height=60% src="data/group_common_in.html" frameborder=0></iframe>
+            <iframe name="iframe8" marginwidth=0 marginheight=0 width=100% height=60% src="data/analyze_signature.html" frameborder=0></iframe>
+            <iframe name="iframe9" marginwidth=0 marginheight=0 width=100% height=60% src="data/wx_face_merged_image.html" frameborder=0></iframe>
+            <iframe name="iframe10" marginwidth=0 marginheight=0 width=100% height=60% src="data/face_merged_image.html" frameborder=0></iframe>
         '''
         f.write(data)
 
@@ -322,23 +324,23 @@ def merge_head_image():
                 x = 0
                 y += 1
 
-    toImage.save('data/拼接' + ".jpg")
+    toImage.save('data/head_images' + ".jpg")
 
 
     # 生成一个网页
-    with open('data/微信好友头像拼接图.html', 'w', encoding='utf-8') as f:
+    with open('data/wx_face_merged_image.html', 'w') as f:
         data = '''
             <!DOCTYPE html>
             <html xmlns="http://www.w3.org/1999/xhtml">
             <head>
                   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
                   <meta charset="utf-8" /> 
-                  <title>微信好友头像拼接图</title> 
+                  <title>wx_face_merged_image</title> 
             </head>
             <body>
-                <p><font size=4px><strong>微信好友头像拼接图</strong></font></p>
+                <p><font size=4px><strong>wx_face_merged_image</strong></font></p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <img src="拼接.jpg" />
+                <img src="head_images.jpg" />
             </body>
             </html>
         '''
@@ -411,23 +413,23 @@ def detect_human_face():
                 x = 0
                 y += 1
 
-    toImage.save('data/使用人脸的拼接' + ".jpg")
+    toImage.save('data/face_merge' + ".jpg")
 
 
     # 生成一个网页
-    with open('data/使用人脸的微信好友头像拼接图.html', 'w', encoding='utf-8') as f:
+    with open('data/face_merged_image.html', 'w') as f:
         data = '''
             <!DOCTYPE html>
             <html xmlns="http://www.w3.org/1999/xhtml">
             <head>
                   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
                   <meta charset="utf-8" /> 
-                  <title>使用人脸的微信好友头像拼接图</title> 
+                  <title>face_merged_image</title> 
             </head>
             <body>
                 <p><font size=4px><strong>描述内容</strong></font></p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <img src="使用人脸的拼接.jpg" />
+                <img src="face_merge.jpg" />
             </body>
             </html>
         '''
@@ -469,7 +471,7 @@ def analyze_special_friends():
 
     bar = Bar('特殊好友分析')
     bar.add(name='', x_axis=['星标', '不让他看我朋友圈', '不看他朋友圈', '消息置顶', '陌生人'], y_axis=[star_friends, hide_my_post_friends, hide_his_post_friends, sticky_on_top_friends, stranger_friends], legend_orient="vertical", legend_pos="left")
-    bar.render('data/特殊好友分析.html')
+    bar.render('data/special_friend.html')
 
 
 
@@ -525,7 +527,7 @@ def group_common_in():
 
     bar = Bar('共同所在群聊分析')
     bar.add(name='', x_axis=[x[0] for x in sort_list], y_axis=[x[1] for x in sort_list], legend_orient="vertical", legend_pos="left")
-    bar.render('data/共同所在群聊分析.html')
+    bar.render('data/group_common_in.html')
 
 
 # 运行前，请先确保安装了所需库文件
@@ -624,10 +626,10 @@ if __name__ == '__main__':
 
     # 生成一份最终的html文件
     print(u'所有数据获取完毕，正在生成微信个人数据报告，请耐心等待……')
-    generate_html('微信个人数据报告.html')
-    print(u'生成微信个人数据报告完毕，该文件为当前目录下的[微信个人数据报告.html]\n')
+    generate_html('wx_personal_report.html')
+    print(u'生成微信个人数据报告完毕，该文件为当前目录下的[wx_personal_report.html]\n')
 
 
     # 调用系统方式自动打开这个html文件
     print(u'已为你自动打开 微信个人数据报告.html')
-    open_html('微信个人数据报告.html')
+    open_html('wx_personal_report.html')
